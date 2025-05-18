@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Web Project</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #faf8f8;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .box {
+      flex: 1 1 300px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #007bff;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      background-color: #007bffc6;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 22px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 18px;
+      }
+
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Responsive & Interactive Web App</h1>
+    <p>Media Queries + JavaScript Quiz + API Data</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Box 1: Responsive Info -->
+    <div class="box">
+      <h2>Responsive Design</h2>
+      <p>This layout adjusts based on screen size. Try resizing the browser or viewing on a mobile device!</p>
+    </div>
+
+    <!-- Box 2: JavaScript Quiz -->
+    <div class="box" id="quizBox">
+      <h2>JavaScript Quiz</h2>
+      <div id="question"></div>
+      <div id="choices"></div>
+      <button onclick="nextQuestion()">Next</button>
+      <div id="result"></div>
+    </div>
+
+    <!-- Box 3: API Joke Fetch -->
+    <div class="box">
+      <h2>Random Joke Generator</h2>
+      <div id="joke">Click the button to get a joke!</div>
+      <button onclick="fetchJoke()">Get Joke</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Quiz Logic
+    const quiz = [
+      {
+        question: "What does CSS stand for?",
+        choices: ["Creative Style System", "Cascading Style Sheets", "Computer Style Syntax", "Color Style Selector"],
+        answer: "Cascading Style Sheets"
+      },
+      {
+        question: "Which tag is used to include JavaScript in HTML?",
+        choices: ["<js>", "<javascript>", "<script>", "<code>"],
+        answer: "<script>"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quiz[current];
+      document.getElementById("question").innerText = q.question;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      q.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.innerText = choice;
+        btn.onclick = () => {
+          if (choice === q.answer) score++;
+          nextQuestion();
+        };
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < quiz.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quizBox").innerHTML = `<h3>You scored ${score}/${quiz.length}</h3>`;
+      }
+    }
+
+    loadQuestion();
+
+    // Fetch Joke from API
+    async function fetchJoke() {
+      const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+      const data = await res.json();
+      document.getElementById("joke").innerText = `${data.setup} - ${data.punchline}`;
+    }
+  </script>
+
+</body>
+</html>
