@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Unique Portfolio</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+      color: #333;
+      transition: background 0.5s ease;
+    }
+    header {
+      background-color: #6a11cb;
+      color: white;
+      padding: 1em 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+    section {
+      padding: 2em;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    .todo input, .todo button {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .todo button {
+      background-color: #7b2ff7;
+      color: white;
+      cursor: pointer;
+    }
+    .note {
+      background: #f1f8e9;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #8bc34a;
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      background: #ffecb3;
+    }
+    .products {
+      display: flex;
+      flex-direction: column;
+    }
+    footer {
+      background-color: #6a11cb;
+      color: white;
+      text-align: center;
+      padding: 1em;
+      margin-top: 2em;
+    }
+    @media (max-width: 600px) {
+      nav { display: block; }
+    }
+    .skills, .faq {
+      background-color: #fce4ec;
+      margin: 2em 0;
+      padding: 1em;
+      border-radius: 8px;
+    }
+    details {
+      margin-top: 1em;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 0.5em 1em;
+      border-radius: 20px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    body.dark {
+      background: #1e1e1e;
+      color: #f1f1f1;
+    }
+    body.dark header,
+    body.dark footer {
+      background: #333;
+    }
+    body.dark .skills,
+    body.dark .faq,
+    body.dark .product,
+    body.dark .todo {
+      background: #2a2a2a;
+      color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  <header>
+    <h1>My Unique Portfolio</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="about" class="container">
+      <h2>About Me</h2>
+      <p>Hello! I'm a full-stack developer specializing in building interactive and user-friendly web applications. My goal is to create experiences that users love and clients value.</p>
+    </section>
+
+    <section class="container skills">
+      <h2>Skills</h2>
+      <ul>
+        <li>HTML, CSS, JavaScript</li>
+        <li>React, Node.js</li>
+        <li>Python, Django</li>
+        <li>Responsive Design & UX</li>
+      </ul>
+    </section>
+
+    <section id="projects" class="container">
+      <h2>Projects</h2>
+
+      <h3>To-Do List App</h3>
+      <div class="todo">
+        <input type="text" id="taskInput" placeholder="Enter a task" />
+        <button onclick="addTask()">Add</button>
+        <ul id="taskList"></ul>
+      </div>
+
+      <h3>Product Filter & Sort</h3>
+      <div>
+        <label>Category:
+          <select id="categoryFilter" onchange="filterProducts()">
+            <option value="all">All</option>
+            <option value="tech">Tech</option>
+            <option value="clothes">Clothes</option>
+            <option value="accessories">Accessories</option>
+          </select>
+        </label>
+        <label>Sort by:
+          <select id="sortSelect" onchange="filterProducts()">
+            <option value="rating">Rating</option>
+            <option value="price">Price</option>
+          </select>
+        </label>
+      </div>
+      <div class="products" id="productList"></div>
+    </section>
+
+    <section class="container faq">
+      <h2>FAQ</h2>
+      <details>
+        <summary>What technologies do you use?</summary>
+        <p>I use modern stacks like React, Node.js, Django, and REST APIs.</p>
+      </details>
+      <details>
+        <summary>Do you work with databases?</summary>
+        <p>Yes, I'm proficient with MongoDB, MySQL, and PostgreSQL.</p>
+      </details>
+    </section>
+
+    <section id="contact" class="container">
+      <h2>Contact</h2>
+      <p>Email: developer@example.com</p>
+      <p>LinkedIn: <a href="https://linkedin.com" target="_blank">View Profile</a></p>
+      <p>GitHub: <a href="https://github.com" target="_blank">github.com/yourprofile</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Unique Portfolio</p>
+  </footer>
+
+  <script>
+    // --- To-Do List with Local Storage ---
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      taskList.innerHTML = '';
+      tasks.forEach((task, i) => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        li.onclick = () => removeTask(i);
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const task = taskInput.value.trim();
+      if (!task) return;
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.push(task);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      taskInput.value = '';
+      loadTasks();
+    }
+
+    function removeTask(index) {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.splice(index, 1);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      loadTasks();
+    }
+
+    loadTasks();
+
+    // --- Product Filter and Sort ---
+    const products = [
+      { name: 'Laptop', category: 'tech', price: 999, rating: 4.5 },
+      { name: 'Headphones', category: 'tech', price: 199, rating: 4.7 },
+      { name: 'T-shirt', category: 'clothes', price: 25, rating: 4.2 },
+      { name: 'Jacket', category: 'clothes', price: 120, rating: 4.8 },
+      { name: 'Watch', category: 'accessories', price: 150, rating: 4.6 },
+      { name: 'Backpack', category: 'accessories', price: 80, rating: 4.3 }
+    ];
+
+    function filterProducts() {
+      const category = document.getElementById('categoryFilter').value;
+      const sortBy = document.getElementById('sortSelect').value;
+
+      let filtered = [...products];
+      if (category !== 'all') {
+        filtered = filtered.filter(p => p.category === category);
+      }
+
+      if (sortBy === 'price') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else {
+        filtered.sort((a, b) => b.rating - a.rating);
+      }
+
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+      filtered.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `<strong>${p.name}</strong><br>Category: ${p.category}<br>Price: $${p.price}<br>Rating: ${p.rating}`;
+        productList.appendChild(div);
+      });
+    }
+
+    filterProducts();
+
+    // --- Theme Toggle ---
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>
